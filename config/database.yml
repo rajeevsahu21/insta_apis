@@ -4,14 +4,14 @@
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
 #
-#default: &default
-#  database: insta_api
-#  host: localhost
-#  username: rajeev
-#  password: 12345678
-#  adapter: postgresql
-#  pool: <%#= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-#  timeout: 5000
+default: &default
+  database: insta_api_default
+  host: localhost
+  username: rajeev
+  password: 12345678
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
 
 development:
   database: insta_api
@@ -25,10 +25,14 @@ development:
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-#test:
-#  <<: *default
-#  database: db/test.sqlite3
-
+test:
+  database: insta_api_test
+  host: localhost
+  username: rajeev
+  password: 12345678
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
 #production:
 #  <<: *default
 #  database: db/production.sqlite3
