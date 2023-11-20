@@ -1,7 +1,12 @@
 module V1
   class Auth < Grape::API
+    AUTH_HELPER = Helpers::AuthHelper
     version 'v1'
     format :json
+
+    rescue_from V1::Helpers::AuthHelper::AuthenticationError do |e|
+      error!({ error: e.message }, e.status)
+    end
 
     resources :auth do
       desc 'Register user'
@@ -11,19 +16,7 @@ module V1
         requires :password, type: String, desc: 'Password of the User'
       end
       post :signup do
-        begin
-          user = User.new(name: params[:name], email: params[:email], password: params[:password])
-          if user.save
-            cookies[:user_id] = user.id
-            { message: 'account created successfully' }
-          else
-            status 400
-            { error: 'something went wrong' }
-          end
-        rescue Exception => e
-          status 500
-          { error: e.message }
-        end
+        AUTH_HELPER.new(cookies).register_user(params)
       end
       desc 'Login user'
       params do
@@ -31,31 +24,11 @@ module V1
         requires :password, type: String, desc: 'Password of the User'
       end
       post :login do
-        begin
-          user = User.find_by(email: params[:email].downcase)
-          if user && user.authenticate(params[:password])
-            cookies[:user_id] = user.id
-            status 200
-            { message: 'user logged in successfully' }
-          else
-            status 400
-            { error: 'Email or password is invalid' }
-          end
-        rescue Exception => e
-          status 500
-          { error: e.message }
-        end
+        AUTH_HELPER.new(cookies).login_user(params)
       end
       desc 'Logout User'
       post :logout do
-        if cookies[:user_id]
-          cookies.delete(:user_id)
-          status 200
-          { message: 'User logout successfully' }
-        else
-          status 400
-          { error: 'user is not logged in' }
-        end
+        AUTH_HELPER.new(cookies).logout_user
       end
     end
   end
