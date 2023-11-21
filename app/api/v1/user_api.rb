@@ -20,6 +20,22 @@ module V1
         AUTH_HELPER.new(cookies).current_user
         user_helper.get_all_users(params)
       end
+      desc 'Follow other user'
+      params do
+        requires :followed_id, type: Integer
+      end
+      post :follow do
+        current_user = AUTH_HELPER.new(cookies).current_user
+        user_helper.follow_user(params, current_user)
+      end
+      desc 'Unfollow other user'
+      params do
+        requires :followed_id, type: Integer
+      end
+      post :unfollow do
+        current_user = AUTH_HELPER.new(cookies).current_user
+        user_helper.unfollow_user(params, current_user)
+      end
     end
   end
 end

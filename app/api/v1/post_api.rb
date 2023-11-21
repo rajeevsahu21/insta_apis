@@ -17,7 +17,21 @@ module V1
       end
       post do
         current_user = AUTH_HELPER.new(cookies).current_user
-        post_helper.create(params, current_user)
+        post_helper.create_post(params, current_user)
+      end
+      desc 'Get all post of the user'
+      get do
+        current_user = AUTH_HELPER.new(cookies).current_user
+        post_helper.get_user_posts(current_user)
+      end
+      desc 'update post'
+      params do
+        optional :caption, type: String, desc: 'Caption of the post'
+        optional :location, type: String, desc: 'Location of the post'
+      end
+      put ':id' do
+        current_user = AUTH_HELPER.new(cookies).current_user
+        post_helper.update_post(params, current_user)
       end
     end
   end
