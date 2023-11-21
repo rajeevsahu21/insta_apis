@@ -51,6 +51,8 @@ module V1
           else
             raise AuthenticationError.new('User is not logged in', 401)
           end
+        else
+          raise AuthenticationError.new('Cookies not found', 403)
         end
       end
     end

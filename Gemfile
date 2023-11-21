@@ -65,3 +65,5 @@ gem "grape", "~> 2.0"
 gem "pg", "~> 1.5"
 
 
+
+gem "grape-entity", "~> 1.0"

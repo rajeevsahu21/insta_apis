@@ -1,10 +1,10 @@
 module V1
-  class Auth < Grape::API
+  class AuthApi < Grape::API
     AUTH_HELPER = Helpers::AuthHelper
     version 'v1'
     format :json
 
-    rescue_from V1::Helpers::AuthHelper::AuthenticationError do |e|
+    rescue_from AUTH_HELPER::AuthenticationError do |e|
       error!({ error: e.message }, e.status)
     end
 

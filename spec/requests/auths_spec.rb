@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe V1::Auth do
+RSpec.describe V1::AuthApi do
   include Rack::Test::Methods
 
   def app
-    V1::Auth
+    V1::AuthApi
   end
 
   describe 'POST /api/v1/auth/signup' do
@@ -23,7 +23,7 @@ RSpec.describe V1::Auth do
 
   describe 'POST /api/v1/auth/login' do
     it 'logs in a user successfully' do
-      User.create(name: 'John Doe', email: 'john@example.com', password: 'password123')
+      create(:user, email: 'john@example.com', password: 'password123')
       post '/api/v1/auth/login', { email: 'john@example.com', password: 'password123' }
       expect(last_response.status).to eq(201)
       expect(JSON.parse(last_response.body)).to include('message' => 'user logged in successfully')
@@ -38,7 +38,7 @@ RSpec.describe V1::Auth do
 
   describe 'POST /api/v1/auth/logout' do
     it 'logs out a logged-in user successfully' do
-      user = User.create(name: 'John Doe', email: 'john@example.com', password: 'password123')
+      user = create(:user, email: 'john@example.com', password: 'password123')
       post '/api/v1/auth/login', { email: 'john@example.com', password: 'password123' }
       post '/api/v1/auth/logout', {}, 'rack.session' => { user_id: user.id }
       expect(last_response.status).to eq(201)
