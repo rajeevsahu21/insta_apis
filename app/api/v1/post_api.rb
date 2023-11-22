@@ -14,6 +14,7 @@ module V1
       params do
         requires :caption, type: String, desc: 'Caption of the post'
         requires :location, type: String, desc: 'Location of the post'
+        optional :tagged_user, type: Array[Integer], desc: 'Ids of tagged users'
       end
       post do
         current_user = AUTH_HELPER.new(cookies).current_user
@@ -24,7 +25,7 @@ module V1
         current_user = AUTH_HELPER.new(cookies).current_user
         post_helper.get_user_posts(current_user)
       end
-      desc 'update post'
+      desc 'Update a post'
       params do
         optional :caption, type: String, desc: 'Caption of the post'
         optional :location, type: String, desc: 'Location of the post'
@@ -32,6 +33,27 @@ module V1
       put ':id' do
         current_user = AUTH_HELPER.new(cookies).current_user
         post_helper.update_post(params, current_user)
+      end
+      desc 'Delete a post'
+      delete ':id' do
+        AUTH_HELPER.new(cookies).current_user
+        post_helper.delete_post(params)
+      end
+      desc 'Like a post'
+      params do
+        requires :id, type: Integer, desc: 'Post Id'
+      end
+      post ':id/like' do
+        current_user = AUTH_HELPER.new(cookies).current_user
+        post_helper.like_post(params, current_user)
+      end
+      desc 'get likes of a post'
+      params do
+        requires :id, type: Integer, desc: 'Post Id'
+      end
+      get ':id/like' do
+        AUTH_HELPER.new(cookies).current_user
+        post_helper.get_liked_user(params)
       end
     end
   end
