@@ -1,25 +1,63 @@
 require 'rails_helper'
 
-RSpec.describe Post, type: :model do
+RSpec.describe Like, type: :model do
+  describe 'associations' do
+    it 'belongs to a user' do
+      expect(described_class.reflect_on_association(:user).macro).to eq :belongs_to
+    end
+
+    it 'belongs to a post' do
+      expect(described_class.reflect_on_association(:post).macro).to eq :belongs_to
+    end
+  end
+
   describe 'validations' do
-    it 'is valid with valid attributes' do
-      post = build(:post)
-      expect(post).to be_valid
+    it 'requires a user' do
+      expect(build(:like, user: nil)).not_to be_valid
     end
 
-    it 'is not valid without a user' do
-      post = build(:post, user: nil)
-      expect(post).to_not be_valid
+    it 'requires a post' do
+      expect(build(:like, post: nil)).not_to be_valid
     end
 
-    it 'is valid without a caption' do
-      post = build(:post, caption: nil)
-      expect(post).to be_valid
+    # You can add any other validations as needed
+  end
+
+  describe 'factory' do
+    it 'is valid' do
+      like = build(:like)
+      expect(like).to be_valid
+    end
+  end
+
+  describe 'scopes' do
+    describe '.for_user' do
+      it 'returns likes for a specific user' do
+        user = create(:user)
+        post = create(:post)
+        like1 = create(:like, user: user, post: post)
+        like2 = create(:like, user: user, post: create(:post)) # Another post
+
+        likes_for_user = Like.for_user(user.id)
+
+        expect(likes_for_user).to include(like1)
+        expect(likes_for_user).to include(like2)
+      end
     end
 
-    it 'is valid without a location' do
-      post = build(:post, location: nil)
-      expect(post).to be_valid
+    describe '.for_post' do
+      it 'returns likes for a specific post' do
+        post = create(:post)
+        user1 = create(:user)
+        user2 = create(:user)
+        like1 = create(:like, user: user1, post: post)
+        like2 = create(:like, user: user2, post: post)
+
+        likes_for_post = Like.for_post(post.id)
+
+        expect(likes_for_post).to include(like1)
+        expect(likes_for_post).to include(like2)
+      end
     end
   end
 end

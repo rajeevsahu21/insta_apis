@@ -74,6 +74,11 @@ module V1
         AUTH_HELPER.new(cookies).current_user
         post_helper.get_post_comments(params)
       end
+      desc 'Get feed of the user'
+      get :feed do
+        current_user = AUTH_HELPER.new(cookies).current_user
+        post_helper.feed(current_user)
+      end
     end
   end
 end

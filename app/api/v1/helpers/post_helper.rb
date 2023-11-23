@@ -68,6 +68,11 @@ module V1
       def get_post_comments(params)
         Comment.where(post_id: params[:id])
       end
+
+      def feed(current_user)
+        following_ids = 'SELECT followed_id FROM relationships WHERE follower_id = :user_id'
+        Post.where("user_id IN (#{following_ids}) OR user_id = :user_id", user_id: current_user.id)
+      end
     end
   end
 end

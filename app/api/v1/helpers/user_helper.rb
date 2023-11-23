@@ -7,7 +7,7 @@ module V1
       end
 
       def follow_user(params, current_user)
-        @user = User.find(params[:followed_id])
+        @user = User.find_by(id: params[:followed_id])
         if @user
           if current_user.following.include?(@user)
             raise AuthHelper::AuthenticationError.new('user is already followed', 400)
@@ -20,7 +20,7 @@ module V1
       end
 
       def unfollow_user(params, current_user)
-        @user = User.find(params[:followed_id])
+        @user = User.find_by(id: params[:followed_id])
         if current_user.following.include?(@user)
           current_user.unfollow(@user)
           { message: 'unfollow success' }
