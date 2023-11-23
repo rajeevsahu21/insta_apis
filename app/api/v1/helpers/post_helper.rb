@@ -55,6 +55,19 @@ module V1
       def get_liked_user(params)
         User.joins(:likes).where(likes: { post_id: params[:id] }).select('users.id, users.name')
       end
+
+      def create_comment(params, current_user)
+        comment = Comment.new(post_id: params[:id], user_id: current_user.id, content: params[:content])
+        if comment.save
+          { message: 'Comment created successfully' }
+        else
+          raise AuthHelper::AuthenticationError.new('Failed to create comment', 422)
+        end
+      end
+
+      def get_post_comments(params)
+        Comment.where(post_id: params[:id])
+      end
     end
   end
 end
