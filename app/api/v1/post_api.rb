@@ -12,11 +12,11 @@ module V1
     resource :post do
       desc 'Create a post for user'
       params do
-        # requires :data, type: String, desc: 'Data of the post'
-        # optional :images, type: File, desc: 'Images of the post'
-        requires :caption, type: String, desc: 'Caption of the post'
-        requires :location, type: String, desc: 'Location of the post'
-        optional :tagged_user, type: Array[Integer], desc: 'Ids of tagged users'
+        requires :data, type: String, desc: 'Data of the post'
+        optional :images, type: File, desc: 'Images of the post'
+        # requires :caption, type: String, desc: 'Caption of the post'
+        # requires :location, type: String, desc: 'Location of the post'
+        # optional :tagged_user, type: Array[Integer], desc: 'Ids of tagged users'
       end
       post do
         current_user = AUTH_HELPER.new(cookies).current_user
