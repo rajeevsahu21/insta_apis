@@ -5,34 +5,23 @@
 #   gem 'sqlite3'
 #
 default: &default
-  database: insta_api_default
-  host: localhost
-  username: rajeev
-  password: 12345678
+  database: <%= ENV.fetch("DB_NAME") { :insta_api } %>
+  host: <%= ENV.fetch("DB_HOST") { :localhost } %>
+  username: <%= ENV.fetch("DB_USER_NAME") { :rajeev } %>
+  password: <%= ENV.fetch("DB_PASSWORD") { 12345678 } %>
   adapter: postgresql
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
 development:
-  database: insta_api
-  host: localhost
-  username: rajeev
-  password: 12345678
-  adapter: postgresql
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+ <<: *default
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  database: insta_api_test
-  host: localhost
-  username: rajeev
-  password: 12345678
-  adapter: postgresql
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-#production:
-#  <<: *default
-#  database: db/production.sqlite3
+ <<: *default
+ database: insta_api_test
+
+production:
+ <<: *default
