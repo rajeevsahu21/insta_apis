@@ -2,7 +2,7 @@ module V1
   module Helpers
     class PostHelper
       def create_post(params, current_user)
-        data = JSON.parse(params[:data])
+        data = HashWithIndifferentAccess.new(JSON.parse(params[:data]))
         post = Post.new(caption: data[:caption], location: data[:location], user_id: current_user.id)
         if params[:images].present?
           image_base64 = Base64.encode64(params[:images][:tempfile].read)

@@ -17,7 +17,10 @@ module V1
       def register_user(params)
         user = User.new(name: params[:name], email: params[:email], password: params[:password])
         if user.save
-          @cookies[:user_id] = user.id
+          @cookies[:user_id] = {
+            value: user.id,
+            path: '/api/v1'
+          }
           { message: 'account created successfully' }
         else
           raise AuthenticationError.new('Failed to create account', 422)
@@ -27,7 +30,10 @@ module V1
       def login_user(params)
         user = User.find_by(email: params[:email].downcase)
         if user && user.authenticate(params[:password])
-          @cookies[:user_id] = user.id
+          @cookies[:user_id] = {
+            value: user.id,
+            path: '/api/v1'
+          }
           { message: 'user logged in successfully' }
         else
           raise AuthenticationError.new('Email or password is invalid', 401)
