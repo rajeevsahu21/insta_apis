@@ -3,11 +3,13 @@ module V1
     class PostHelper
       def create_post(params, current_user)
         data = JSON.parse(params[:data])
-        image_base64 = Base64.encode64(params[:images][:tempfile].read)
         post = Post.new(caption: data[:caption], location: data[:location], user_id: current_user.id)
-        post.images << image_base64
+        if params[:images].present?
+          image_base64 = Base64.encode64(params[:images][:tempfile].read)
+          post.images << image_base64
+        end
         if post.save
-          tagged_users_ids = params[:tagged_users]
+          tagged_users_ids = data[:tagged_users]
           tagged_users_ids&.each do |user_id|
             Tag.create(user_id: user_id, post_id: post.id)
           end

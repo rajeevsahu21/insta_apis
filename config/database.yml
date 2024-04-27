@@ -15,6 +15,10 @@ default: &default
 
 development:
  <<: *default
+ database: insta_api
+ host: localhost
+ username: rajeev
+ password: 12345678
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -22,6 +26,9 @@ development:
 test:
  <<: *default
  database: insta_api_test
+ host: localhost
+ username: rajeev
+ password: 12345678
 
 production:
  <<: *default

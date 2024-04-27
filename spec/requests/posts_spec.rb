@@ -11,19 +11,19 @@ RSpec.describe V1::PostApi do
   describe 'POST /api/v1/post' do
     it 'creates a post for the authenticated user' do
       set_cookie("user_id=#{user.id}")
-      post '/api/v1/post', caption: 'Test Caption', location: 'Test Location', tagged_users: [1, 2, 3]
+      post '/api/v1/post', data: { caption: 'Test Caption', location: 'Test Location', tagged_users: [1, 2, 3] }.to_json
 
       expect(last_response.status).to eq(201)
       expect(JSON.parse(last_response.body)['message']).to eq('Post created successfully')
     end
 
-    it 'returns an error if post creation fails' do
+    it 'returns an error if data not present' do
       set_cookie("user_id=#{user.id}")
       # Simulate a failure scenario by not providing required parameters
-      post '/api/v1/post', caption: 'Test Caption'
+      post '/api/v1/post'
 
       expect(last_response.status).to eq(400)
-      expect(JSON.parse(last_response.body)['error']).to eq('location is missing')
+      expect(JSON.parse(last_response.body)['error']).to eq('data is missing')
     end
   end
 
